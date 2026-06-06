@@ -674,24 +674,43 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onAddMoney, onLogout }) => 
         {/* Services Grid — refined */}
         <Card className="border border-slate-200/70 shadow-sm rounded-2xl bg-white">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-slate-800">Services</h3>
-              <span className="text-[11px] text-slate-500">Bills & More</span>
-            </div>
-            <div className="grid grid-cols-4 gap-3">
-              {services.map((service, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleServiceClick(service)}
-                  className="flex flex-col items-center text-center py-2 hover:bg-slate-50 rounded-xl transition-colors"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 flex items-center justify-center mb-1.5 shadow-sm">
-                    <service.icon className="w-4 h-4" />
-                  </div>
-                  <p className="text-[10.5px] font-medium text-slate-700 leading-tight">{service.title}</p>
-                </button>
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-4 w-20 rounded" />
+                  <Skeleton className="h-3 w-20 rounded" />
+                </div>
+                <div className="grid grid-cols-4 gap-3">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="flex flex-col items-center text-center py-2 gap-1.5">
+                      <Skeleton className="h-10 w-10 rounded-xl" />
+                      <Skeleton className="h-3 w-12 rounded" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-slate-800">Services</h3>
+                  <span className="text-[11px] text-slate-500">Bills & More</span>
+                </div>
+                <div className="grid grid-cols-4 gap-3">
+                  {services.map((service, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleServiceClick(service)}
+                      className="flex flex-col items-center text-center py-2 hover:bg-slate-50 rounded-xl transition-colors"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 flex items-center justify-center mb-1.5 shadow-sm">
+                        <service.icon className="w-4 h-4" />
+                      </div>
+                      <p className="text-[10.5px] font-medium text-slate-700 leading-tight">{service.title}</p>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
 
