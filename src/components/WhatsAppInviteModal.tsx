@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 interface PaymentUpdateModalProps {
   isOpen: boolean;
   onClose: () => void;
+  user?: { name: string; email: string };
 }
 
 const PaymentUpdateModal: React.FC<PaymentUpdateModalProps> = ({ isOpen, onClose }) => {

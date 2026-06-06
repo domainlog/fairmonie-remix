@@ -95,7 +95,7 @@ export const useTextToSpeech = () => {
       performSpeak();
     } else {
       // Wait for voices with timeout
-      let voiceTimeout;
+      let voiceTimeout: ReturnType<typeof setTimeout> | undefined;
       
       const handleVoicesLoaded = () => {
         clearTimeout(voiceTimeout);
