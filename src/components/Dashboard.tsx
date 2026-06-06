@@ -559,52 +559,72 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onAddMoney, onLogout }) => 
             <div className="absolute -right-4 bottom-0 w-32 h-32 rounded-full border-[12px] border-white"></div>
           </div>
           <CardContent className="p-5 relative">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-emerald-50/90 uppercase tracking-wider">Available Balance</span>
-                <button
-                  onClick={() => setShowBalance(!showBalance)}
-                  className="p-1 hover:bg-white/15 rounded-full transition-colors"
-                  aria-label="Toggle balance"
-                >
-                  <Eye className="w-3.5 h-3.5" />
-                </button>
+            {isLoading ? (
+              <div className="space-y-5">
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-4 w-28 bg-white/20 rounded" />
+                  <Skeleton className="h-3 w-8 bg-white/20 rounded" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-10 w-48 bg-white/20 rounded" />
+                  <Skeleton className="h-3 w-32 bg-white/20 rounded" />
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <Skeleton className="h-14 w-full bg-white/20 rounded-xl" />
+                  <Skeleton className="h-14 w-full bg-white/30 rounded-xl" />
+                  <Skeleton className="h-14 w-full bg-white/20 rounded-xl" />
+                </div>
               </div>
-              <span className="text-[10px] font-semibold tracking-widest text-emerald-100/80">NGN</span>
-            </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-emerald-50/90 uppercase tracking-wider">Available Balance</span>
+                    <button
+                      onClick={() => setShowBalance(!showBalance)}
+                      className="p-1 hover:bg-white/15 rounded-full transition-colors"
+                      aria-label="Toggle balance"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                  <span className="text-[10px] font-semibold tracking-widest text-emerald-100/80">NGN</span>
+                </div>
 
-            <div className="mt-3 mb-5">
-              <div className="text-4xl font-bold tracking-tight">
-                {showBalance ? `₦${balance.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '₦ • • • • • •'}
-              </div>
-              <div className="mt-1 text-[11px] text-emerald-100/80">
-                Account · {user.email.slice(0, 2).toUpperCase()}••••{user.email.slice(-4)}
-              </div>
-            </div>
+                <div className="mt-3 mb-5">
+                  <div className="text-4xl font-bold tracking-tight">
+                    {showBalance ? `₦${balance.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '₦ • • • • • •'}
+                  </div>
+                  <div className="mt-1 text-[11px] text-emerald-100/80">
+                    Account · {user.email.slice(0, 2).toUpperCase()}••••{user.email.slice(-4)}
+                  </div>
+                </div>
 
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                onClick={handleAddMoneyClick}
-                className="flex flex-col items-center justify-center gap-1 bg-white/15 hover:bg-white/25 backdrop-blur-sm rounded-xl py-2.5 transition-colors border border-white/10"
-              >
-                <Gift className="w-4 h-4" />
-                <span className="text-[11px] font-semibold">Claim Bonus</span>
-              </button>
-              <button
-                onClick={() => setShowWithdrawal(true)}
-                className="flex flex-col items-center justify-center gap-1 bg-white text-emerald-700 hover:bg-emerald-50 rounded-xl py-2.5 transition-colors shadow-md"
-              >
-                <ArrowUpRight className="w-4 h-4" />
-                <span className="text-[11px] font-semibold">Withdraw</span>
-              </button>
-              <button
-                onClick={handleTransactionHistoryClick}
-                className="flex flex-col items-center justify-center gap-1 bg-white/15 hover:bg-white/25 backdrop-blur-sm rounded-xl py-2.5 transition-colors border border-white/10"
-              >
-                <History className="w-4 h-4" />
-                <span className="text-[11px] font-semibold">History</span>
-              </button>
-            </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    onClick={handleAddMoneyClick}
+                    className="flex flex-col items-center justify-center gap-1 bg-white/15 hover:bg-white/25 backdrop-blur-sm rounded-xl py-2.5 transition-colors border border-white/10"
+                  >
+                    <Gift className="w-4 h-4" />
+                    <span className="text-[11px] font-semibold">Claim Bonus</span>
+                  </button>
+                  <button
+                    onClick={() => setShowWithdrawal(true)}
+                    className="flex flex-col items-center justify-center gap-1 bg-white text-emerald-700 hover:bg-emerald-50 rounded-xl py-2.5 transition-colors shadow-md"
+                  >
+                    <ArrowUpRight className="w-4 h-4" />
+                    <span className="text-[11px] font-semibold">Withdraw</span>
+                  </button>
+                  <button
+                    onClick={handleTransactionHistoryClick}
+                    className="flex flex-col items-center justify-center gap-1 bg-white/15 hover:bg-white/25 backdrop-blur-sm rounded-xl py-2.5 transition-colors border border-white/10"
+                  >
+                    <History className="w-4 h-4" />
+                    <span className="text-[11px] font-semibold">History</span>
+                  </button>
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
 
