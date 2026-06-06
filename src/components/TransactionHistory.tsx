@@ -1,5 +1,6 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, ArrowUpRight, ArrowDownLeft, Clock, Bell } from 'lucide-react';
 
