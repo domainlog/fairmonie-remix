@@ -101,6 +101,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onAddMoney, onLogout }) => 
   const [lastWithdrawal, setLastWithdrawal] = useState<any>(null);
   const [showScrollCBN, setShowScrollCBN] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Get first name from user.name
   const firstName = user.name.split(' ')[0];
