@@ -716,25 +716,33 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onAddMoney, onLogout }) => 
 
         {/* Promotional Banner Carousel */}
         <div className="w-full">
-          <Carousel className="w-full" setApi={setApi}>
-            <CarouselContent>
-              {promoImages.map((image, index) => (
-                <CarouselItem key={index}>
-                  <div className="p-0.5">
-                    <Card className="border border-slate-200/70 shadow-sm rounded-2xl overflow-hidden">
-                      <CardContent className="p-0">
-                        <img
-                          src={image}
-                          alt={`FairMoney Promo ${index + 1}`}
-                          className="w-full h-32 object-cover"
-                        />
-                      </CardContent>
-                    </Card>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+          {isLoading ? (
+            <Card className="border border-slate-200/70 shadow-sm rounded-2xl overflow-hidden">
+              <CardContent className="p-0">
+                <Skeleton className="w-full h-32 rounded-none" />
+              </CardContent>
+            </Card>
+          ) : (
+            <Carousel className="w-full" setApi={setApi}>
+              <CarouselContent>
+                {promoImages.map((image, index) => (
+                  <CarouselItem key={index}>
+                    <div className="p-0.5">
+                      <Card className="border border-slate-200/70 shadow-sm rounded-2xl overflow-hidden">
+                        <CardContent className="p-0">
+                          <img
+                            src={image}
+                            alt={`FairMoney Promo ${index + 1}`}
+                            className="w-full h-32 object-cover"
+                          />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+          )}
         </div>
 
         {/* Official trust footer */}
