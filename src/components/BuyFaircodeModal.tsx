@@ -65,7 +65,7 @@ const BuyFaircodeModal: React.FC<BuyFaircodeModalProps> = ({ onBack, user }) => 
   // Auto-speak when transfer notice is shown
   useEffect(() => {
     if (showTransferNotice) {
-      const textToSpeak = `Before you make this transfer, please note: Transfer only the exact amount of 5,500 naira. Do not transfer an incorrect amount. Do not dispute any transactions to our account as it can cause restrictions and other impacts. Avoid using Opay bank for your payment as this can lead to delays in verifying your payment click, I understand to continue your payment.`;
+      const textToSpeak = `Before you make this transfer, please note: Transfer only the exact amount of 7,500 naira. Do not transfer an incorrect amount. Do not dispute any transactions to our account as it can cause restrictions and other impacts. Avoid using Opay bank for your payment as this can lead to delays in verifying your payment click, I understand to continue your payment.`;
 
       enableSpeech();
       const t = setTimeout(() => {
