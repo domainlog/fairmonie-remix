@@ -489,101 +489,162 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onAddMoney, onLogout }) => 
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       {/* Withdrawal Notifications - always visible and continuous */}
       <WithdrawalNotifications isVisible={true} />
 
-      {/* Header */}
-      <div className="bg-white px-4 py-4 shadow-sm">
+      {/* Header — Official banking style */}
+      <div className="bg-gradient-to-r from-emerald-800 via-emerald-700 to-emerald-800 px-4 pt-5 pb-20 shadow-md relative">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <Avatar className="w-10 h-10">
-              <AvatarFallback className="bg-green-100 text-green-600 font-semibold">
+            <Avatar className="w-11 h-11 ring-2 ring-white/40">
+              <AvatarFallback className="bg-white text-emerald-700 font-bold">
                 {firstName.charAt(0)}
               </AvatarFallback>
             </Avatar>
-            <span className="text-lg font-medium text-gray-900">Hi, {firstName}</span>
+            <div className="flex flex-col leading-tight">
+              <span className="text-[11px] uppercase tracking-widest text-emerald-100/80">Welcome back</span>
+              <span className="text-base font-semibold text-white">{firstName}</span>
+            </div>
           </div>
-          <div className="flex items-center space-x-3">
-            <button 
+          <div className="flex items-center space-x-1">
+            <button
               onClick={() => setShowLiveChat(true)}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors animate-slow-bounce"
+              className="p-2 hover:bg-white/10 rounded-full transition-colors"
+              aria-label="Support"
             >
-              <Headphones className="w-6 h-6 text-gray-600" />
+              <Headphones className="w-5 h-5 text-white" />
             </button>
-            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <Maximize className="w-6 h-6 text-gray-600" />
+            <button className="p-2 hover:bg-white/10 rounded-full transition-colors" aria-label="Scan">
+              <Maximize className="w-5 h-5 text-white" />
             </button>
             <button
               onClick={handleTransactionHistoryClick}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors relative"
+              className="p-2 hover:bg-white/10 rounded-full transition-colors relative"
+              aria-label="Notifications"
             >
-              <Bell className="w-6 h-6 text-gray-600" />
+              <Bell className="w-5 h-5 text-white" />
               {transactions.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                   {transactions.length > 9 ? '9+' : transactions.length}
                 </span>
               )}
             </button>
           </div>
         </div>
+
+        {/* Trust badge inline */}
+        <div className="mt-4 inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-200" />
+          <span className="text-[10px] font-medium text-white tracking-wide">CBN LICENSED · NDIC INSURED</span>
+        </div>
       </div>
 
-      <div className="px-4 py-6 space-y-6">
-        {/* Balance Card */}
-        <Card className="gradient-green text-white border-0 shadow-lg animate-slideUp">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-2">
-                <ShieldCheck className="w-5 h-5" />
-                <span className="text-sm font-medium">Available Balance</span>
+      <div className="px-4 pb-6 space-y-5 -mt-14">
+        {/* Balance Card — Premium bank-card aesthetic */}
+        <Card className="relative overflow-hidden border-0 shadow-2xl rounded-2xl animate-slideUp bg-gradient-to-br from-emerald-700 via-emerald-600 to-emerald-800 text-white">
+          {/* Decorative pattern */}
+          <div className="absolute inset-0 opacity-10 pointer-events-none">
+            <div className="absolute -right-12 -top-12 w-48 h-48 rounded-full border-[20px] border-white"></div>
+            <div className="absolute -right-4 bottom-0 w-32 h-32 rounded-full border-[12px] border-white"></div>
+          </div>
+          <CardContent className="p-5 relative">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-emerald-50/90 uppercase tracking-wider">Available Balance</span>
                 <button
                   onClick={() => setShowBalance(!showBalance)}
-                  className="p-1 hover:bg-white/20 rounded-full transition-colors"
+                  className="p-1 hover:bg-white/15 rounded-full transition-colors"
+                  aria-label="Toggle balance"
                 >
-                  <Eye className="w-4 h-4" />
+                  <Eye className="w-3.5 h-3.5" />
                 </button>
               </div>
+              <span className="text-[10px] font-semibold tracking-widest text-emerald-100/80">NGN</span>
             </div>
-            
-            <div className="flex flex-col items-center justify-center text-center mb-6">
-              <div className="text-3xl font-bold mb-4">
-                {showBalance ? `₦${balance.toLocaleString()}.00` : '****'}
+
+            <div className="mt-3 mb-5">
+              <div className="text-4xl font-bold tracking-tight">
+                {showBalance ? `₦${balance.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '₦ • • • • • •'}
               </div>
-              <Button
+              <div className="mt-1 text-[11px] text-emerald-100/80">
+                Account · {user.email.slice(0, 2).toUpperCase()}••••{user.email.slice(-4)}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2">
+              <button
                 onClick={handleAddMoneyClick}
-                className="bg-white text-green-600 hover:bg-gray-50 rounded-full px-6 py-2 font-medium transition-all duration-200 transform hover:scale-105"
+                className="flex flex-col items-center justify-center gap-1 bg-white/15 hover:bg-white/25 backdrop-blur-sm rounded-xl py-2.5 transition-colors border border-white/10"
               >
-                <Gift className="w-4 h-4 mr-2" />
-                Claim Bonus 🎁
-              </Button>
+                <Gift className="w-4 h-4" />
+                <span className="text-[11px] font-semibold">Claim Bonus</span>
+              </button>
+              <button
+                onClick={() => setShowWithdrawal(true)}
+                className="flex flex-col items-center justify-center gap-1 bg-white text-emerald-700 hover:bg-emerald-50 rounded-xl py-2.5 transition-colors shadow-md"
+              >
+                <ArrowUpRight className="w-4 h-4" />
+                <span className="text-[11px] font-semibold">Withdraw</span>
+              </button>
+              <button
+                onClick={handleTransactionHistoryClick}
+                className="flex flex-col items-center justify-center gap-1 bg-white/15 hover:bg-white/25 backdrop-blur-sm rounded-xl py-2.5 transition-colors border border-white/10"
+              >
+                <History className="w-4 h-4" />
+                <span className="text-[11px] font-semibold">History</span>
+              </button>
             </div>
           </CardContent>
         </Card>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-3 gap-4">
-          {quickActions.map((action, index) => (
-            <div key={index} className="text-center cursor-pointer" onClick={() => handleQuickActionClick(action)}>
-              <div className={`w-12 h-12 rounded-full ${action.color} flex items-center justify-center mx-auto mb-3`}>
-                <action.icon className="w-6 h-6" />
-              </div>
-              <p className="text-sm font-medium text-gray-700">{action.title}</p>
+        {/* Quick Actions — refined */}
+        <Card className="border border-slate-200/70 shadow-sm rounded-2xl bg-white">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-slate-800">Quick Actions</h3>
+              <span className="text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">Secured</span>
             </div>
-          ))}
-        </div>
+            <div className="grid grid-cols-3 gap-3">
+              {quickActions.map((action, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleQuickActionClick(action)}
+                  className="flex flex-col items-center text-center py-2 hover:bg-slate-50 rounded-xl transition-colors"
+                >
+                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 flex items-center justify-center mb-2 shadow-sm">
+                    <action.icon className="w-5 h-5" />
+                  </div>
+                  <p className="text-xs font-medium text-slate-700">{action.title}</p>
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-4 gap-4">
-          {services.map((service, index) => (
-            <div key={index} className="text-center cursor-pointer" onClick={() => handleServiceClick(service)}>
-              <div className={`w-10 h-10 rounded-full ${service.color} flex items-center justify-center mx-auto mb-2`}>
-                <service.icon className="w-5 h-5" />
-              </div>
-              <p className="text-xs font-medium text-gray-700">{service.title}</p>
+        {/* Services Grid — refined */}
+        <Card className="border border-slate-200/70 shadow-sm rounded-2xl bg-white">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-slate-800">Services</h3>
+              <span className="text-[11px] text-slate-500">Bills & More</span>
             </div>
-          ))}
-        </div>
+            <div className="grid grid-cols-4 gap-3">
+              {services.map((service, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleServiceClick(service)}
+                  className="flex flex-col items-center text-center py-2 hover:bg-slate-50 rounded-xl transition-colors"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 flex items-center justify-center mb-1.5 shadow-sm">
+                    <service.icon className="w-4 h-4" />
+                  </div>
+                  <p className="text-[10.5px] font-medium text-slate-700 leading-tight">{service.title}</p>
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Promotional Banner Carousel */}
         <div className="w-full">
@@ -591,11 +652,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onAddMoney, onLogout }) => 
             <CarouselContent>
               {promoImages.map((image, index) => (
                 <CarouselItem key={index}>
-                  <div className="p-1">
-                    <Card className="border-0 shadow-lg overflow-hidden">
+                  <div className="p-0.5">
+                    <Card className="border border-slate-200/70 shadow-sm rounded-2xl overflow-hidden">
                       <CardContent className="p-0">
-                        <img 
-                          src={image} 
+                        <img
+                          src={image}
                           alt={`FairMoney Promo ${index + 1}`}
                           className="w-full h-32 object-cover"
                         />
@@ -608,14 +669,19 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onAddMoney, onLogout }) => 
           </Carousel>
         </div>
 
-        {/* CBN Verification - Only shows on scroll up */}
-        {showScrollCBN && (
-          <div className="text-center py-4 animate-fadeIn">
-            <p className="text-green-600 font-semibold text-sm">
-              ✓ Verified by CBN
-            </p>
+        {/* Official trust footer */}
+        <div className="flex flex-col items-center gap-2 pt-2 pb-4">
+          <div className="flex items-center gap-2 text-slate-500">
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span className="text-[11px] font-medium">Bank-grade 256-bit encryption</span>
           </div>
-        )}
+          <p className="text-[10px] text-slate-400 text-center max-w-xs">
+            Fairmonie Pay is licensed by the Central Bank of Nigeria (CBN) and deposits are insured by NDIC up to ₦5,000,000.
+          </p>
+          {showScrollCBN && (
+            <p className="text-emerald-700 font-semibold text-xs animate-fadeIn">✓ Verified by CBN</p>
+          )}
+        </div>
       </div>
 
       {/* Modals */}
