@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -100,6 +101,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onAddMoney, onLogout }) => 
   const [lastWithdrawal, setLastWithdrawal] = useState<any>(null);
   const [showScrollCBN, setShowScrollCBN] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Get first name from user.name
   const firstName = user.name.split(' ')[0];
@@ -121,7 +123,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onAddMoney, onLogout }) => 
     if (savedBalance) {
       setBalance(parseFloat(savedBalance));
     }
-    
+
     const savedTransactions = localStorage.getItem(`userTransactions_${user.email}`);
     if (savedTransactions) {
       setTransactions(JSON.parse(savedTransactions));
@@ -135,13 +137,21 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onAddMoney, onLogout }) => 
 
     // Check for pending referral bonuses
     checkForReferralBonuses();
-    
+
     // Show welcome modal on every app startup
     const welcomeTimer = setTimeout(() => {
       setShowWelcomeModal(true);
     }, 1000);
-    
-    return () => clearTimeout(welcomeTimer);
+
+    // Simulate content loading so skeleton placeholders appear briefly
+    const loadTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 900);
+
+    return () => {
+      clearTimeout(welcomeTimer);
+      clearTimeout(loadTimer);
+    };
   }, [user.email]);
 
   // Function to check and credit referral bonuses
@@ -549,124 +559,190 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onAddMoney, onLogout }) => 
             <div className="absolute -right-4 bottom-0 w-32 h-32 rounded-full border-[12px] border-white"></div>
           </div>
           <CardContent className="p-5 relative">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-emerald-50/90 uppercase tracking-wider">Available Balance</span>
-                <button
-                  onClick={() => setShowBalance(!showBalance)}
-                  className="p-1 hover:bg-white/15 rounded-full transition-colors"
-                  aria-label="Toggle balance"
-                >
-                  <Eye className="w-3.5 h-3.5" />
-                </button>
+            {isLoading ? (
+              <div className="space-y-5">
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-4 w-28 bg-white/20 rounded" />
+                  <Skeleton className="h-3 w-8 bg-white/20 rounded" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-10 w-48 bg-white/20 rounded" />
+                  <Skeleton className="h-3 w-32 bg-white/20 rounded" />
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <Skeleton className="h-14 w-full bg-white/20 rounded-xl" />
+                  <Skeleton className="h-14 w-full bg-white/30 rounded-xl" />
+                  <Skeleton className="h-14 w-full bg-white/20 rounded-xl" />
+                </div>
               </div>
-              <span className="text-[10px] font-semibold tracking-widest text-emerald-100/80">NGN</span>
-            </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-emerald-50/90 uppercase tracking-wider">Available Balance</span>
+                    <button
+                      onClick={() => setShowBalance(!showBalance)}
+                      className="p-1 hover:bg-white/15 rounded-full transition-colors"
+                      aria-label="Toggle balance"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                  <span className="text-[10px] font-semibold tracking-widest text-emerald-100/80">NGN</span>
+                </div>
 
-            <div className="mt-3 mb-5">
-              <div className="text-4xl font-bold tracking-tight">
-                {showBalance ? `₦${balance.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '₦ • • • • • •'}
-              </div>
-              <div className="mt-1 text-[11px] text-emerald-100/80">
-                Account · {user.email.slice(0, 2).toUpperCase()}••••{user.email.slice(-4)}
-              </div>
-            </div>
+                <div className="mt-3 mb-5">
+                  <div className="text-4xl font-bold tracking-tight">
+                    {showBalance ? `₦${balance.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '₦ • • • • • •'}
+                  </div>
+                  <div className="mt-1 text-[11px] text-emerald-100/80">
+                    Account · {user.email.slice(0, 2).toUpperCase()}••••{user.email.slice(-4)}
+                  </div>
+                </div>
 
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                onClick={handleAddMoneyClick}
-                className="flex flex-col items-center justify-center gap-1 bg-white/15 hover:bg-white/25 backdrop-blur-sm rounded-xl py-2.5 transition-colors border border-white/10"
-              >
-                <Gift className="w-4 h-4" />
-                <span className="text-[11px] font-semibold">Claim Bonus</span>
-              </button>
-              <button
-                onClick={() => setShowWithdrawal(true)}
-                className="flex flex-col items-center justify-center gap-1 bg-white text-emerald-700 hover:bg-emerald-50 rounded-xl py-2.5 transition-colors shadow-md"
-              >
-                <ArrowUpRight className="w-4 h-4" />
-                <span className="text-[11px] font-semibold">Withdraw</span>
-              </button>
-              <button
-                onClick={handleTransactionHistoryClick}
-                className="flex flex-col items-center justify-center gap-1 bg-white/15 hover:bg-white/25 backdrop-blur-sm rounded-xl py-2.5 transition-colors border border-white/10"
-              >
-                <History className="w-4 h-4" />
-                <span className="text-[11px] font-semibold">History</span>
-              </button>
-            </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    onClick={handleAddMoneyClick}
+                    className="flex flex-col items-center justify-center gap-1 bg-white/15 hover:bg-white/25 backdrop-blur-sm rounded-xl py-2.5 transition-colors border border-white/10"
+                  >
+                    <Gift className="w-4 h-4" />
+                    <span className="text-[11px] font-semibold">Claim Bonus</span>
+                  </button>
+                  <button
+                    onClick={() => setShowWithdrawal(true)}
+                    className="flex flex-col items-center justify-center gap-1 bg-white text-emerald-700 hover:bg-emerald-50 rounded-xl py-2.5 transition-colors shadow-md"
+                  >
+                    <ArrowUpRight className="w-4 h-4" />
+                    <span className="text-[11px] font-semibold">Withdraw</span>
+                  </button>
+                  <button
+                    onClick={handleTransactionHistoryClick}
+                    className="flex flex-col items-center justify-center gap-1 bg-white/15 hover:bg-white/25 backdrop-blur-sm rounded-xl py-2.5 transition-colors border border-white/10"
+                  >
+                    <History className="w-4 h-4" />
+                    <span className="text-[11px] font-semibold">History</span>
+                  </button>
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
 
         {/* Quick Actions — refined */}
         <Card className="border border-slate-200/70 shadow-sm rounded-2xl bg-white">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-slate-800">Quick Actions</h3>
-              <span className="text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">Secured</span>
-            </div>
-            <div className="grid grid-cols-3 gap-3">
-              {quickActions.map((action, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleQuickActionClick(action)}
-                  className="flex flex-col items-center text-center py-2 hover:bg-slate-50 rounded-xl transition-colors"
-                >
-                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 flex items-center justify-center mb-2 shadow-sm">
-                    <action.icon className="w-5 h-5" />
-                  </div>
-                  <p className="text-xs font-medium text-slate-700">{action.title}</p>
-                </button>
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-4 w-24 rounded" />
+                  <Skeleton className="h-4 w-14 rounded-full" />
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="flex flex-col items-center text-center py-2 gap-2">
+                      <Skeleton className="h-11 w-11 rounded-xl" />
+                      <Skeleton className="h-3 w-14 rounded" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-slate-800">Quick Actions</h3>
+                  <span className="text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">Secured</span>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  {quickActions.map((action, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleQuickActionClick(action)}
+                      className="flex flex-col items-center text-center py-2 hover:bg-slate-50 rounded-xl transition-colors"
+                    >
+                      <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 flex items-center justify-center mb-2 shadow-sm">
+                        <action.icon className="w-5 h-5" />
+                      </div>
+                      <p className="text-xs font-medium text-slate-700">{action.title}</p>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
 
         {/* Services Grid — refined */}
         <Card className="border border-slate-200/70 shadow-sm rounded-2xl bg-white">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-slate-800">Services</h3>
-              <span className="text-[11px] text-slate-500">Bills & More</span>
-            </div>
-            <div className="grid grid-cols-4 gap-3">
-              {services.map((service, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleServiceClick(service)}
-                  className="flex flex-col items-center text-center py-2 hover:bg-slate-50 rounded-xl transition-colors"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 flex items-center justify-center mb-1.5 shadow-sm">
-                    <service.icon className="w-4 h-4" />
-                  </div>
-                  <p className="text-[10.5px] font-medium text-slate-700 leading-tight">{service.title}</p>
-                </button>
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-4 w-20 rounded" />
+                  <Skeleton className="h-3 w-20 rounded" />
+                </div>
+                <div className="grid grid-cols-4 gap-3">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="flex flex-col items-center text-center py-2 gap-1.5">
+                      <Skeleton className="h-10 w-10 rounded-xl" />
+                      <Skeleton className="h-3 w-12 rounded" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-slate-800">Services</h3>
+                  <span className="text-[11px] text-slate-500">Bills & More</span>
+                </div>
+                <div className="grid grid-cols-4 gap-3">
+                  {services.map((service, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleServiceClick(service)}
+                      className="flex flex-col items-center text-center py-2 hover:bg-slate-50 rounded-xl transition-colors"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 flex items-center justify-center mb-1.5 shadow-sm">
+                        <service.icon className="w-4 h-4" />
+                      </div>
+                      <p className="text-[10.5px] font-medium text-slate-700 leading-tight">{service.title}</p>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
 
         {/* Promotional Banner Carousel */}
         <div className="w-full">
-          <Carousel className="w-full" setApi={setApi}>
-            <CarouselContent>
-              {promoImages.map((image, index) => (
-                <CarouselItem key={index}>
-                  <div className="p-0.5">
-                    <Card className="border border-slate-200/70 shadow-sm rounded-2xl overflow-hidden">
-                      <CardContent className="p-0">
-                        <img
-                          src={image}
-                          alt={`FairMoney Promo ${index + 1}`}
-                          className="w-full h-32 object-cover"
-                        />
-                      </CardContent>
-                    </Card>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+          {isLoading ? (
+            <Card className="border border-slate-200/70 shadow-sm rounded-2xl overflow-hidden">
+              <CardContent className="p-0">
+                <Skeleton className="w-full h-32 rounded-none" />
+              </CardContent>
+            </Card>
+          ) : (
+            <Carousel className="w-full" setApi={setApi}>
+              <CarouselContent>
+                {promoImages.map((image, index) => (
+                  <CarouselItem key={index}>
+                    <div className="p-0.5">
+                      <Card className="border border-slate-200/70 shadow-sm rounded-2xl overflow-hidden">
+                        <CardContent className="p-0">
+                          <img
+                            src={image}
+                            alt={`FairMoney Promo ${index + 1}`}
+                            className="w-full h-32 object-cover"
+                          />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+          )}
         </div>
 
         {/* Official trust footer */}
