@@ -123,7 +123,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onAddMoney, onLogout }) => 
     if (savedBalance) {
       setBalance(parseFloat(savedBalance));
     }
-    
+
     const savedTransactions = localStorage.getItem(`userTransactions_${user.email}`);
     if (savedTransactions) {
       setTransactions(JSON.parse(savedTransactions));
@@ -137,13 +137,21 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onAddMoney, onLogout }) => 
 
     // Check for pending referral bonuses
     checkForReferralBonuses();
-    
+
     // Show welcome modal on every app startup
     const welcomeTimer = setTimeout(() => {
       setShowWelcomeModal(true);
     }, 1000);
-    
-    return () => clearTimeout(welcomeTimer);
+
+    // Simulate content loading so skeleton placeholders appear briefly
+    const loadTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 900);
+
+    return () => {
+      clearTimeout(welcomeTimer);
+      clearTimeout(loadTimer);
+    };
   }, [user.email]);
 
   // Function to check and credit referral bonuses
