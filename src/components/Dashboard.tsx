@@ -631,24 +631,43 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onAddMoney, onLogout }) => 
         {/* Quick Actions — refined */}
         <Card className="border border-slate-200/70 shadow-sm rounded-2xl bg-white">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-slate-800">Quick Actions</h3>
-              <span className="text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">Secured</span>
-            </div>
-            <div className="grid grid-cols-3 gap-3">
-              {quickActions.map((action, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleQuickActionClick(action)}
-                  className="flex flex-col items-center text-center py-2 hover:bg-slate-50 rounded-xl transition-colors"
-                >
-                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 flex items-center justify-center mb-2 shadow-sm">
-                    <action.icon className="w-5 h-5" />
-                  </div>
-                  <p className="text-xs font-medium text-slate-700">{action.title}</p>
-                </button>
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-4 w-24 rounded" />
+                  <Skeleton className="h-4 w-14 rounded-full" />
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="flex flex-col items-center text-center py-2 gap-2">
+                      <Skeleton className="h-11 w-11 rounded-xl" />
+                      <Skeleton className="h-3 w-14 rounded" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-slate-800">Quick Actions</h3>
+                  <span className="text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">Secured</span>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  {quickActions.map((action, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleQuickActionClick(action)}
+                      className="flex flex-col items-center text-center py-2 hover:bg-slate-50 rounded-xl transition-colors"
+                    >
+                      <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 flex items-center justify-center mb-2 shadow-sm">
+                        <action.icon className="w-5 h-5" />
+                      </div>
+                      <p className="text-xs font-medium text-slate-700">{action.title}</p>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
 
