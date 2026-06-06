@@ -4,6 +4,7 @@ import { lazy, Suspense, useEffect, useState } from "react";
 const FairmonieApp = lazy(() => import("@/pages/FairmonieApp"));
 
 export const Route = createFileRoute("/")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Fairmonie — Smart Banking for Everyone" },
