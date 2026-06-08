@@ -11,5 +11,13 @@ export default defineConfig({
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
     server: { entry: "server" },
+    nitro: {
+      prerender: {
+        crawlLinks: true,
+        routes: ["/"],
+      },
+      // Configure for Vercel Node.js deployment
+      preset: "node-server",
+    },
   },
 });
